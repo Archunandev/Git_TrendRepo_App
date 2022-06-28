@@ -1,4 +1,4 @@
-package com.example.gittrendrepoapp.view.activity
+package com.example.gittrendrepoapp.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

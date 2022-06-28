@@ -3,3 +3,6 @@ Github Trending Repositories
 
 ## Setting Up
 Setting up the status bar, menu search, swipe to refresh & view binding
+
+## Design Ui
+Add recyclerview & this items design.

@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Arjun/AndroidStudioProjects/GitTrendRepoApp/app/src/main/res/layout/activity_main.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/Arjun/AndroidStudioProjects/GitTrendRepoApp/app/src/main/res/drawable-v24/ic_square_outline.xml" value="0.145" />
+        <entry key="..\:/Users/Arjun/AndroidStudioProjects/GitTrendRepoApp/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/Arjun/AndroidStudioProjects/GitTrendRepoApp/app/src/main/res/layout/repo_item_list.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/Arjun/AndroidStudioProjects/GitTrendRepoApp/app/src/main/res/menu/menu_search.xml" value="0.221025641025641" />
       </map>
     </option>
