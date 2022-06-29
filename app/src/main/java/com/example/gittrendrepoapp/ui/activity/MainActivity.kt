@@ -17,7 +17,7 @@ import com.example.gittrendrepoapp.util.Utility.isVisibility
 import com.example.gittrendrepoapp.viewmodel.GitListViewModelFactory
 import com.example.gittrendrepoapp.viewmodel.GitTrendViewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private lateinit var activityMainBinding: ActivityMainBinding
     lateinit var viewModel: GitTrendViewModel
     private var gitRepoListAdapter: GitRepoListAdapter? = null
@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_search, menu)
         val search = menu?.findItem(R.id.search_action)
         val searchView = search?.actionView as? SearchView
+        searchView?.setOnQueryTextListener(this)
         return true
     }
 
@@ -68,5 +69,18 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        try {
+            gitRepoListAdapter!!.filter.filter(newText)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return true
     }
 }

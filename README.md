@@ -16,3 +16,5 @@ Using retrofit, live data & view model to make our api call and code structure p
 ## Adapter & Error Handling
 Use binding adapter, handle network error & loading state.
 
+## Adapter Filter Search
+Implemented a adapter filter search.
