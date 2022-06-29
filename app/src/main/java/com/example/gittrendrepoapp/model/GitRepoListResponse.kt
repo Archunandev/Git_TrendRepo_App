@@ -1,11 +1,18 @@
 package com.example.gittrendrepoapp.model
 
-import com.google.gson.annotations.SerializedName
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import java.io.Serializable
 
-data class GitRepoListResponse(
-    @SerializedName("name") var name: String?= null,
-    @SerializedName("description") var description: String?= null,
-    @SerializedName("language") var language: String?= null,
-    @SerializedName("languageColor") var languageColor: String?= null,
-    @SerializedName("stars") var stars: Int?= null
+@Entity(
+    tableName = "gitRepoList"
 )
+data class GitRepoListResponse(
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null,
+    var name: String? = null,
+    var description: String? = null,
+    var language: String? = null,
+    var languageColor: String? = null,
+    var stars: Int? = null
+) : Serializable

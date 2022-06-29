@@ -29,6 +29,15 @@ class GitTrendViewModel(app: Application, val gitTrendRepository: GitTrendReposi
 
     fun getGitRepoList() = viewModelScope.launch { getList() }
 
+    fun insertAll(gitRepoResponse: List<GitRepoListResponse>) = viewModelScope.launch {
+        gitTrendRepository.insertListDb(gitRepoResponse)
+    }
+
+    fun savedListOnDb() = gitTrendRepository.getSavedList()
+
+    fun deleteList() = viewModelScope.launch { gitTrendRepository.deleteList() }
+
+
     private suspend fun getList() {
         gitRepoList.postValue(Resource.Loading())
         try {

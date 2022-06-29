@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.gittrendrepoapp.R
 import com.example.gittrendrepoapp.databinding.ActivityMainBinding
+import com.example.gittrendrepoapp.db.GitTrendRoomDb
 import com.example.gittrendrepoapp.repository.GitTrendRepository
 import com.example.gittrendrepoapp.ui.adapter.GitRepoListAdapter
 import com.example.gittrendrepoapp.util.Resource
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         setContentView(activityMainBinding.root)
         supportActionBar?.elevation = 0F
 
-        val gitTrendRepository = GitTrendRepository()
+        val gitTrendRepository = GitTrendRepository(GitTrendRoomDb(this))
         val gitListViewModelFactory = GitListViewModelFactory(application, gitTrendRepository)
         viewModel = ViewModelProvider(this, gitListViewModelFactory)[GitTrendViewModel::class.java]
 
@@ -55,6 +56,8 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                 }
                 is Resource.Success -> {
                     gitRepoListAdapter = response.data?.let { GitRepoListAdapter(it) }
+                    viewModel.deleteList()
+                    response.data?.let { viewModel.insertAll(it) }
                     activityMainBinding.apply {
                         gitrepoRecy.adapter = gitRepoListAdapter
                         progress.isVisibility(false)
@@ -62,12 +65,19 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                     }
                 }
                 is Resource.Error -> {
+                    getFromDb()
                     activityMainBinding.apply {
                         progress.isVisibility(false)
                         networkError.isVisibility(true)
                     }
                 }
             }
+        })
+    }
+
+    private fun getFromDb() {
+        viewModel.savedListOnDb().observe(this, Observer { repoList ->
+            Log.e("arjun", "getRepoListDb:${repoList.toList().size}")
         })
     }
 

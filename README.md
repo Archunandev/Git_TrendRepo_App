@@ -18,3 +18,6 @@ Use binding adapter, handle network error & loading state.
 
 ## Adapter Filter Search
 Implemented a adapter filter search.
+
+## Setting Up Room
+Implemented the room database & check internet connection for working with offline support.
