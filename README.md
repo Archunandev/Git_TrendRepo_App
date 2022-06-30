@@ -21,3 +21,6 @@ Implemented a adapter filter search.
 
 ## Setting Up Room
 Implemented the room database & check internet connection for working with offline support.
+
+## Offline Support
+save the list on room database.Check user internet connection to show a list from db or server.

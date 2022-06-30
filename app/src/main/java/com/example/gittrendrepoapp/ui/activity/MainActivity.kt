@@ -1,16 +1,19 @@
 package com.example.gittrendrepoapp.ui.activity
 
+import android.content.res.Resources
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.gittrendrepoapp.R
 import com.example.gittrendrepoapp.databinding.ActivityMainBinding
 import com.example.gittrendrepoapp.db.GitTrendRoomDb
+import com.example.gittrendrepoapp.model.GitRepoListResponse
 import com.example.gittrendrepoapp.repository.GitTrendRepository
 import com.example.gittrendrepoapp.ui.adapter.GitRepoListAdapter
 import com.example.gittrendrepoapp.util.Resource
@@ -32,13 +35,16 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         val gitTrendRepository = GitTrendRepository(GitTrendRoomDb(this))
         val gitListViewModelFactory = GitListViewModelFactory(application, gitTrendRepository)
         viewModel = ViewModelProvider(this, gitListViewModelFactory)[GitTrendViewModel::class.java]
+        getRepoList()
 
         activityMainBinding.apply {
             pullToRefresh.setOnRefreshListener { getRepoList() }
             tryAgain.setOnClickListener { getRepoList() }
+            pullToRefresh.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.blue))
+            pullToRefresh.setColorSchemeColors(resources.getColor(R.color.white))
         }
-        getRepoList()
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
@@ -51,33 +57,51 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private fun getRepoList() {
         viewModel.gitRepoList.observe(this, Observer { response ->
             when (response) {
+
                 is Resource.Loading -> {
                     activityMainBinding.progress.isVisibility(true)
                 }
+
                 is Resource.Success -> {
-                    gitRepoListAdapter = response.data?.let { GitRepoListAdapter(it) }
                     viewModel.deleteList()
-                    response.data?.let { viewModel.insertAll(it) }
-                    activityMainBinding.apply {
-                        gitrepoRecy.adapter = gitRepoListAdapter
-                        progress.isVisibility(false)
-                        pullToRefresh.isRefreshing = false
+                    response.data?.let {
+                        viewModel.insertAll(it)
+                        setUpRv(it)
                     }
                 }
+
                 is Resource.Error -> {
-                    getFromDb()
-                    activityMainBinding.apply {
-                        progress.isVisibility(false)
-                        networkError.isVisibility(true)
+                    response.message.let { message ->
+                        if (message.equals("No connection")) {
+                            getFromDb()
+                        } else {
+                            Toast.makeText(this, "$message", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
         })
     }
 
+    private fun setUpRv(it: List<GitRepoListResponse>) {
+        gitRepoListAdapter = GitRepoListAdapter(it)
+        activityMainBinding.apply {
+            gitrepoRecy.adapter = gitRepoListAdapter
+            progress.isVisibility(false)
+            pullToRefresh.isRefreshing = false
+        }
+    }
+
     private fun getFromDb() {
         viewModel.savedListOnDb().observe(this, Observer { repoList ->
-            Log.e("arjun", "getRepoListDb:${repoList.toList().size}")
+            if (!repoList.isNullOrEmpty()) {
+                setUpRv(it = repoList)
+            } else {
+                activityMainBinding.apply {
+                    progress.isVisibility(false)
+                    networkError.isVisibility(true)
+                }
+            }
         })
     }
 
