@@ -38,13 +38,12 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         getRepoList()
 
         activityMainBinding.apply {
-            pullToRefresh.setOnRefreshListener { getRepoList() }
-            tryAgain.setOnClickListener { getRepoList() }
+            pullToRefresh.setOnRefreshListener { viewModel.getGitRepoList() }
+            tryAgain.setOnClickListener { viewModel.getGitRepoList() }
             pullToRefresh.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.blue))
             pullToRefresh.setColorSchemeColors(resources.getColor(R.color.white))
         }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
@@ -89,6 +88,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             gitrepoRecy.adapter = gitRepoListAdapter
             progress.isVisibility(false)
             pullToRefresh.isRefreshing = false
+            networkError.isVisibility(false)
         }
     }
 
